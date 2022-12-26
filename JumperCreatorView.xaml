@@ -1,0 +1,80 @@
+﻿<Window x:Class="ARTools.JumperCreatorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ARTools"
+             mc:Ignorable="d"             
+             Height="Auto" Width="600" Title ="Создание перемычек" Background="LightBlue" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style x:Key="commonStyle" TargetType="Control">
+            <Style.Setters>
+                <Setter Property="Margin" Value="5"/>
+            </Style.Setters>
+        </Style>
+        <Style x:Key="textboxStyle" BasedOn="{StaticResource commonStyle}" TargetType="TextBox">
+            <Style.Setters>
+                <Setter Property="Width" Value="135"/>
+                <Setter Property="FontFamily" Value="Isocpeur"/>
+            </Style.Setters>
+        </Style>
+        <Style x:Key="labelStyle"  TargetType="Label">
+            <Style.Setters>
+                <Setter Property="Width" Value="200"/>
+            </Style.Setters>
+        </Style>
+        <Style x:Key="comboStyle" BasedOn="{StaticResource commonStyle}" TargetType="ComboBox">
+            <Style.Setters>
+
+            </Style.Setters>
+        </Style>
+        <Style x:Key="checkStyle" BasedOn="{StaticResource commonStyle}" TargetType="CheckBox">
+            <Style.Setters>
+                <Setter Property="Margin" Value="5"/>
+            </Style.Setters>
+        </Style>
+        <Style x:Key="buttonStyle" BasedOn="{StaticResource commonStyle}" TargetType="Button">
+            <Style.Setters>
+                <Setter Property="Background" Value="LightYellow"/>
+                <Setter Property="Padding" Value="3"/>
+            </Style.Setters>
+        </Style>
+    </Window.Resources>
+    <StackPanel>
+        <Label Content="Выберите тип стены"/>
+        <ComboBox Name="wallTypeBox" Style="{StaticResource comboStyle}" ItemsSource="{Binding WallTypes}" SelectedItem="{Binding SelectedWallType}" DisplayMemberPath="Name"/>
+        <Button Content="Собрать типы проёмов" Style="{StaticResource buttonStyle}" Command="{Binding FillView}"/>
+        <Button Content="Очистить типы проёмов" Style="{StaticResource buttonStyle}" Command="{Binding ClearView}" Click="Button_Click"/>
+        <DataGrid Name="lst" AutoGenerateColumns="False" ItemsSource="{Binding Mappers}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn x:Name="chkbxcol">
+                    <DataGridTemplateColumn.Header>
+                        <CheckBox x:Name="allChecked" Content="" DataContext="{Binding ElementName=lst, Path=DataContext}"
+                                              IsChecked="{Binding AreAllSelected, Mode=TwoWay}" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox x:Name="chk" IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Семейства дверей" Binding="{Binding DoorType.Name}"/>
+                <DataGridTemplateColumn Header="Семейства перемычек">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox x:Name="cbFams" ItemsSource="{Binding JumperFamilies}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedJumperFamily, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Типоразмер перемычек">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding JumperTypes}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedJumperType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button VerticalAlignment="Bottom" Command="{Binding CreateJumpers}" Content="Выполнить" Style="{StaticResource buttonStyle}"/>
+    </StackPanel>
+</Window>
